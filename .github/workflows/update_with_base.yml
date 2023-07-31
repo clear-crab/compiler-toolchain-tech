@@ -9,6 +9,7 @@ env:
   REMOTE_NAME: update
   REMOTE_URL: https://github.com/rust-lang/llvm-project.git
   REMOTE_BRANCH: master
+  RELEASE_BRANCH_NAMESPACE: rustc
 
 permissions:
   contents: write
@@ -36,6 +37,9 @@ jobs:
           
           echo "Fetching ${{ env.REMOTE_NAME }}"
           git fetch ${{ env.REMOTE_NAME }}
+          
+          echo "Pushing release branches"
+          git push ${{ env.REMOTE_NAME }} ${{ env.RELEASE_BRANCH_NAMESPACE }}/*:${{ env.RELEASE_BRANCH_NAMESPACE }}/*
           
           echo "Checking ${{ env.REMOTE_BRANCH }} branch on ${{ env.REMOTE_NAME }} for new commits"
           if [ $(git rev-list --count ${{ env.REMOTE_NAME }}/${{ env.REMOTE_BRANCH }} ^HEAD) -eq 0 ]; then
